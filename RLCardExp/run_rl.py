@@ -42,27 +42,32 @@ def train(args):
         )
     elif args.algorithm == 'nfsp':
         from rlcard.agents import NFSPAgent
-        agent1 = NFSPAgent(
-            num_actions=env.num_actions,
-            state_shape=env.state_shape[0],
-            hidden_layers_sizes=[64,64],
-            q_mlp_layers=[64,64],
-            device='cuda:0',
-        )
-        agent2 = NFSPAgent(
-            num_actions=env.num_actions,
-            state_shape=env.state_shape[0],
-            hidden_layers_sizes=[64,64],
-            q_mlp_layers=[64,64],
-            device='cuda:0',
-        )
-        agent3 = NFSPAgent(
-            num_actions=env.num_actions,
-            state_shape=env.state_shape[0],
-            hidden_layers_sizes=[64,64],
-            q_mlp_layers=[64,64],
-            device='cuda:0',
-        )
+        # agent1 = NFSPAgent(
+        #     num_actions=env.num_actions,
+        #     state_shape=env.state_shape[0],
+        #     hidden_layers_sizes=[64,64],
+        #     q_mlp_layers=[64,64],
+        #     device='cuda:0',
+        # )
+        # agent2 = NFSPAgent(
+        #     num_actions=env.num_actions,
+        #     state_shape=env.state_shape[0],
+        #     hidden_layers_sizes=[64,64],
+        #     q_mlp_layers=[64,64],
+        #     device='cuda:0',
+        # )
+        # agent3 = NFSPAgent(
+        #     num_actions=env.num_actions,
+        #     state_shape=env.state_shape[0],
+        #     hidden_layers_sizes=[64,64],
+        #     q_mlp_layers=[64,64],
+        #     device='cuda:0',
+        # )
+
+    agent1 = torch.load('/content/drive/MyDrive/CS6284/agent1.pth')
+    agent2 = torch.load('/content/drive/MyDrive/CS6284/agent2.pth')
+    agent3 = torch.load('/content/drive/MyDrive/CS6284/agent3.pth')
+    
     agents = [agent1, agent2, agent3]
     # for _ in range(1, env.num_players):
     #     agents.append(RandomAgent(num_actions=env.num_actions))
@@ -99,6 +104,14 @@ def train(args):
                         args.num_eval_games,
                     )
                 )
+            if episode % 5000 == 0:
+              save_path1 = os.path.join(args.log_dir, f'{episode}_nfsp_comp1.pth')
+              save_path2 = os.path.join(args.log_dir, f'{episode}_nfsp_comp2.pth')
+              save_path3 = os.path.join(args.log_dir, f'{episode}_nfsp_comp3.pth')
+              
+              torch.save(agent1, save_path1)
+              torch.save(agent2, save_path2)
+              torch.save(agent3, save_path3)
 
         # Get the paths
         csv_path, fig_path = logger.csv_path, logger.fig_path
@@ -107,9 +120,9 @@ def train(args):
     # plot_curve(csv_path, fig_path, args.algorithm)
 
     # Save model
-    save_path1 = os.path.join(args.log_dir, 'agent1.pth')
-    save_path2 = os.path.join(args.log_dir, 'agent2.pth')
-    save_path3 = os.path.join(args.log_dir, 'agent3.pth')
+    save_path1 = os.path.join(args.log_dir, 'nfsp_comp1.pth')
+    save_path2 = os.path.join(args.log_dir, 'nfsp_comp2.pth')
+    save_path3 = os.path.join(args.log_dir, 'nfsp_comp3.pth')
     
     torch.save(agent1, save_path1)
     torch.save(agent2, save_path2)
@@ -123,7 +136,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--env',
         type=str,
-        default='leduc-holdem',
+        default='limit-holdem',
         choices=[
             'blackjack',
             'leduc-holdem',
@@ -139,7 +152,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--algorithm',
         type=str,
-        default='dqn',
+        default='nfsp',
         choices=[
             'dqn',
             'nfsp',
@@ -158,12 +171,12 @@ if __name__ == '__main__':
     parser.add_argument(
         '--num_episodes',
         type=int,
-        default=15000,
+        default=25000,
     )
     parser.add_argument(
         '--num_eval_games',
         type=int,
-        default=1000,
+        default=2000,
     )
     parser.add_argument(
         '--evaluate_every',
@@ -173,7 +186,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--log_dir',
         type=str,
-        default='experiments/leduc_holdem_dqn_result/',
+        default='/content/drive/MyDrive/CS6284/',
     )
 
     args = parser.parse_args()
