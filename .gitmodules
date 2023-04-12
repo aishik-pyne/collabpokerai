@@ -1,0 +1,6 @@
+[submodule "src/rlcard-showdown"]
+	path = src/rlcard-showdown
+	url = https://github.com/datamllab/rlcard-showdown.git
+[submodule "src/rlcard-multiagent"]
+	path = src/rlcard-multiagent
+	url = https://github.com/aishik-pyne/rlcard-multiagent.git
