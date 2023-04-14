@@ -136,7 +136,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--env',
         type=str,
-        default='limit-holdem',
+        default='limit-holdem-collaborative',
         choices=[
             'blackjack',
             'leduc-holdem',
